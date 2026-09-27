@@ -23,6 +23,16 @@ button{width:100%;border:0;border-radius:16px;padding:17px 20px;font-size:17px;f
 .note{font-size:12px;color:#7f899b;text-align:center;margin:0 0 18px}
 
 .repuno-subgroup,.repuno-workout-subgroup{margin-top:18px}.repuno-subgroup h4,.repuno-workout-subgroup h3{margin:0 0 10px;font-size:14px;color:#aeb8c8;text-transform:uppercase;letter-spacing:.08em}.repuno-number-grid,.repuno-workout-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.repuno-number-card{position:relative;overflow:hidden}.repuno-num{position:absolute;z-index:3;top:8px;left:8px;background:rgba(10,14,20,.82);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:3px 6px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#fff}.repuno-number-card .library-name{padding:9px 10px 12px}.repuno-number-card .v12-ex-name{padding-bottom:12px}.repuno-workout-subgroup{width:100%}
+
+.v12-workout{max-width:980px!important;width:100%;margin:0 auto;padding:24px 18px 110px;box-sizing:border-box}
+.v12-toolbar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:16px!important;align-items:end}
+.v12-field input,.v12-field select{width:100%;min-height:64px;box-sizing:border-box;font-size:20px!important;border-radius:18px!important;padding:14px 18px!important}
+.v12-field label{display:block;margin-bottom:8px;font-size:14px;font-weight:800;letter-spacing:.04em}
+.v12-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}
+.v12-photo{aspect-ratio:1.15/1;min-height:0!important;overflow:hidden;background:#0b1018}
+.v12-ex-card img{width:100%;height:100%;aspect-ratio:auto!important;object-fit:cover}
+.v12-ex-name{font-size:15px;line-height:1.25;min-height:52px;display:flex;align-items:center}
+@media(max-width:620px){.v12-workout{padding:18px 12px 100px}.v12-toolbar{grid-template-columns:1fr!important;gap:12px!important}.v12-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.v12-ex-name{font-size:14px;min-height:48px}.v12-photo{aspect-ratio:1/1}.v12-field input,.v12-field select{min-height:58px;font-size:18px!important}}
 </style>
 <style>
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:flex-end;justify-content:center;z-index:10}
@@ -73,12 +83,12 @@ button{width:100%;border:0;border-radius:16px;padding:17px 20px;font-size:17px;f
 .v12-field label{display:block;color:#9ca9bd;font-weight:700;font-size:13px;margin:0 0 7px;text-transform:uppercase;letter-spacing:.04em}
 .v12-field select,.v12-field input{width:100%;box-sizing:border-box;border:1px solid #303b50;background:#111722;color:#fff;border-radius:16px;padding:15px;font-size:16px}
 .v12-section-title{font-size:18px;font-weight:800;color:#9ca9bd;margin:12px 0}
-.v12-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
-.v12-ex-card{background:#141b28;border:1px solid #2b3548;border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:transform .12s;min-width:0}
+.v12-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.v12-ex-card{background:#141b28;border:1px solid #2b3548;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:transform .12s}
 .v12-ex-card:active{transform:scale(.985)}
-.v12-ex-card img{display:block;width:100%;aspect-ratio:1.25/1;object-fit:cover;background:#0b1018}
-.v12-ex-card .noimg{height:auto;min-height:0;aspect-ratio:1.25/1;display:grid;place-items:center;color:#7f8ba0;background:#0b1018;font-size:13px}
-.v12-ex-name{padding:10px 10px 12px;font-weight:800;font-size:14px;line-height:1.25;min-height:48px;overflow-wrap:anywhere}
+.v12-ex-card img{display:block;width:100%;aspect-ratio:1.08/1;object-fit:cover;background:#0b1018}
+.v12-ex-card .noimg{height:100%;min-height:150px;display:grid;place-items:center;color:#7f8ba0;background:#0b1018;font-size:14px}
+.v12-ex-name{padding:12px 12px 14px;font-weight:800;font-size:15px;line-height:1.18}
 .v12-session{margin-top:20px}.v12-session-card{padding:14px;border:1px solid #2b3548;border-radius:18px;background:#111722;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .v12-session-card strong{font-size:15px}.v12-session-card span{color:#9ca9bd;font-size:13px}
 .v12-session-card button{border:0;background:#252f40;color:#fff;border-radius:12px;padding:9px 11px}
@@ -365,15 +375,15 @@ const REPDB_NAMES={
   "Deadlift":"Barbell Deadlift","Clean and Press":"Clean and Press","Goblet Squat":"Goblet Squat","Farmer Carry":"Farmer Carry"
 };
 const EXERCISE_IDS={
-  'Barbell Bench Press':'Barbell_Bench_Press_-_Medium_Grip','Dumbbell Bench Press':'Dumbbell_Bench_Press','Incline Dumbbell Press':'Incline_Dumbbell_Press','Incline Barbell Bench Press':'Barbell_Incline_Bench_Press_-_Medium_Grip','Decline Barbell Bench Press':'Decline_Barbell_Bench_Press','Chest Press Machine':'Machine_Bench_Press','Incline Machine Press':'PlateLoaded_User','Decline Machine Press':'Decline_Bench_Press','Cable Fly':'Cable_Crossover','Low Cable Fly':'Incline_Cable_Flye','High Cable Fly':'High_Cable_Crossover','Incline Dumbbell Fly':'Incline_Dumbbell_Flyes','Pec Deck':'Butterfly','Chest Dips':'Chest_Dips',
-  'Pull-Up':'Pullups','Chin-Up':'Chin-Up','Lat Pulldown':'Wide-Grip_Lat_Pulldown','Close-Grip Lat Pulldown':'Close-Grip_Front_Lat_Pulldown','One-Arm Lat Pulldown':'One-Arm_Lat_Pulldown','Straight-Arm Pulldown':'Straight-Arm_Pulldown','Seated Cable Row':'Seated_Cable_Rows','Barbell Row':'Bent_Over_Barbell_Row','Chest-Supported Row':'Lying_Cambered_Barbell_Row','One-Arm Dumbbell Row':'One-Arm_Dumbbell_Row','T-Bar Row':'T-Bar_Row',
-  'Overhead Press':'Barbell_Shoulder_Press','Dumbbell Shoulder Press':'Dumbbell_Shoulder_Press','Machine Shoulder Press':'Machine_Shoulder_Military_Press','Front Raise':'Front_Dumbbell_Raise','Lateral Raise':'Side_Lateral_Raise','Standing Lateral Raise Machine':'Standing_Lateral_Raise','Cable Lateral Raise':'Cable_Lateral_Raise','Upright Row':'Upright_Barbell_Row','Rear Delt Fly':'Dumbbell_Lying_Rear_Lateral_Raise','Reverse Pec Deck':'Reverse_Pec_Deck','Reverse Fly with Dumbbells':'Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench','Face Pull':'Face_Pull',
-  'Incline Dumbbell Curl':'Alternate_Incline_Dumbbell_Curl','Dumbbell Curl':'Dumbbell_Bicep_Curl','Barbell Curl':'Barbell_Curl','Preacher Curl':'Preacher_Curl','Concentration Curl':'Concentration_Curls','Cable Curl':'Cable_Standing_Bicep_Curl','Hammer Curl':'Hammer_Curl',
-  'Cable Pushdown':'Triceps_Pushdown','Overhead Cable Extension':'Cable_Rope_Overhead_Triceps_Extension','Skull Crusher':'EZ-Bar_Skullcrusher','Close-Grip Bench Press':'Close-Grip_Bench_Press','Dip':'Triceps_Dip','Rope Pushdown':'Triceps_Pushdown_-_Rope_Attachment',
-  'Back Squat':'Barbell_Squat','Leg Press':'Leg_Press','Leg Extension':'Leg_Extensions','Bulgarian Split Squat':'Split_Squat','Walking Lunge':'Walking_Lunge','Leg Curl':'Lying_Leg_Curl','Romanian Deadlift':'Romanian_Deadlift','Dumbbell Romanian Deadlift':'Stiff-Legged_Dumbbell_Deadlift','Calf Raise':'Standing_Calf_Raise','Adductor Machine':'Adductor',
-  'Hip Thrust':'Barbell_Hip_Thrust','Glute Kickback':'Glute_Kickback','Dumbbell Reverse Lunge':'Dumbbell_Reverse_Lunge',
-  'Cable Crunch':'Cable_Crunch','Decline Sit-Up':'Decline_Crunch','Hanging Knee Raise':'Hanging_Knee_Raise','Ab Wheel':'Ab_Wheel_Rollout','Plank':'Plank','Russian Twist':'Russian_Twist',
-  'Deadlift':'Barbell_Deadlift','Clean and Press':'Clean_and_Press','Goblet Squat':'Goblet_Squat','Farmer Carry':'Farmer_Walk'
+  'Barbell Bench Press':'Barbell_Bench_Press_-_Medium_Grip','Dumbbell Bench Press':'Dumbbell_Bench_Press','Incline Dumbbell Press':'Incline_Dumbbell_Press','Incline Barbell Bench Press':'Barbell_Incline_Bench_Press_-_Medium_Grip','Decline Barbell Bench Press':'Decline_Barbell_Bench_Press','Chest Press Machine':'Machine_Bench_Press','Incline Machine Press':'Smith_Machine_Incline_Bench_Press','Decline Machine Press':'Smith_Machine_Decline_Press','Cable Fly':'Low_Cable_Crossover','Low Cable Fly':'Low_Cable_Crossover','High Cable Fly':'High_Cable_Crossover','Incline Dumbbell Fly':'Incline_Dumbbell_Flyes','Pec Deck':'Butterfly','Chest Dips':'Dips_-_Chest_Version',
+  'Pull-Up':'Pullups','Chin-Up':'Chin-Up','Lat Pulldown':'Wide-Grip_Lat_Pulldown','Close-Grip Lat Pulldown':'Close-Grip_Front_Lat_Pulldown','One-Arm Lat Pulldown':'One-Arm_Lat_Pulldown','Straight-Arm Pulldown':'Straight-Arm_Pulldown','Seated Cable Row':'Seated_Cable_Rows','Barbell Row':'Bent_Over_Barbell_Row','Chest-Supported Row':'Lying_T-Bar_Row','One-Arm Dumbbell Row':'One-Arm_Dumbbell_Row','T-Bar Row':'T-Bar_Row_with_Handle',
+  'Overhead Press':'Barbell_Shoulder_Press','Dumbbell Shoulder Press':'Dumbbell_Shoulder_Press','Machine Shoulder Press':'Machine_Shoulder_Military_Press','Front Raise':'Front_Dumbbell_Raise','Lateral Raise':'Side_Lateral_Raise','Standing Lateral Raise Machine':'Side_Lateral_Raise','Cable Lateral Raise':'Cable_Seated_Lateral_Raise','Upright Row':'Upright_Barbell_Row','Rear Delt Fly':'Cable_Rear_Delt_Fly','Reverse Pec Deck':'Reverse_Flyes','Reverse Fly with Dumbbells':'Reverse_Flyes','Face Pull':'Face_Pull',
+  'Incline Dumbbell Curl':'Incline_Dumbbell_Curl','Dumbbell Curl':'Dumbbell_Bicep_Curl','Barbell Curl':'Barbell_Curl','Preacher Curl':'Preacher_Curl','Concentration Curl':'Standing_Concentration_Curl','Cable Curl':'Cable_Preacher_Curl','Hammer Curl':'Alternate_Hammer_Curl',
+  'Cable Pushdown':'Cable_Incline_Pushdown','Overhead Cable Extension':'Cable_Rope_Overhead_Triceps_Extension','Skull Crusher':'Band_Skull_Crusher','Close-Grip Bench Press':'Close-Grip_Barbell_Bench_Press','Dip':'Dip_Machine','Rope Pushdown':'Triceps_Pushdown_-_Rope_Attachment',
+  'Back Squat':'Barbell_Squat','Leg Press':'Leg_Press','Leg Extension':'Single-Leg_Leg_Extension','Bulgarian Split Squat':'Suspended_Split_Squat','Walking Lunge':'Walking_Lunge','Leg Curl':'Seated_Leg_Curl','Romanian Deadlift':'Romanian_Deadlift','Dumbbell Romanian Deadlift':'Romanian_Deadlift','Calf Raise':'Rocking_Standing_Calf_Raise','Adductor Machine':'Adductor',
+  'Hip Thrust':'Barbell_Hip_Thrust','Glute Kickback':'Glute_Kickback','Dumbbell Reverse Lunge':'Dumbbell_Rear_Lunge',
+  'Cable Crunch':'Cable_Crunch','Decline Sit-Up':'Sit-Up','Hanging Knee Raise':'Hanging_Leg_Raise','Ab Wheel':'Jackknife_Sit-Up','Plank':'Plank','Russian Twist':'Russian_Twist',
+  'Deadlift':'Barbell_Deadlift','Clean and Press':'Clean_and_Press','Goblet Squat':'Goblet_Squat','Farmer Carry':'Farmers_Walk'
 };
 let repdbImages={};
 
@@ -547,8 +557,26 @@ else if(localStorage.getItem("repuno_account")) showProfile();
     es:{workout:'Entrenamiento',choose:'Elige el grupo muscular y el ejercicio',date:'Fecha',group:'Grupo muscular',selected:'Ejercicios seleccionados',noExercises:'Aún no hay ejercicios añadidos.',saveWorkout:'Guardar entrenamiento',back:'← Volver a ejercicios',set:'Serie',kg:'kg',reps:'repeticiones',addSet:'+ Añadir serie',save:'Guardar',history:'Historial del ejercicio',noHistory:'Sin historial.',edit:'Editar',sets:'series',exercise:'ejercicio',saved:'Entrenamiento guardado.',addOne:'Añade al menos un ejercicio.',already:'Este ejercicio ya está en el entrenamiento.'}
   };
   function T(k){return (tr[currentLang]||tr.en)[k]||k}
-  function photo(ex){ if(ex==='Incline Machine Press') return USER_PHOTOS['Plate-Loaded Chest Press']; return USER_PHOTOS[ex] || (EXERCISE_IDS[ex]?imgBase+encodeURI(EXERCISE_IDS[ex])+'/0.jpg':'') }
-  function imgHtml(ex){const src=photo(ex);return src?`<img src="${src}" alt="${exerciseLabel(ex)}" loading="lazy" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="noimg" style="display:none">No photo</div>`:`<div class="noimg">No photo</div>`}
+  const PHOTO_FALLBACKS={Chest:'Barbell_Bench_Press_-_Medium_Grip',Back:'Pullups',Shoulders:'Dumbbell_Shoulder_Press',Biceps:'Barbell_Curl',Triceps:'Triceps_Pushdown_-_Rope_Attachment',Legs:'Leg_Press',Glutes:'Barbell_Hip_Thrust',Core:'Plank','Full body':'Goblet_Squat'};
+  const PHOTO_IDS={
+    'Barbell Bench Press':'Barbell_Bench_Press_-_Medium_Grip','Dumbbell Bench Press':'Dumbbell_Bench_Press','Incline Dumbbell Press':'Incline_Dumbbell_Press','Incline Barbell Bench Press':'Barbell_Incline_Bench_Press_-_Medium_Grip','Decline Barbell Bench Press':'Decline_Barbell_Bench_Press','Chest Press Machine':'Machine_Bench_Press','Incline Machine Press':'Smith_Machine_Incline_Bench_Press','Decline Machine Press':'Smith_Machine_Decline_Press','Cable Fly':'Low_Cable_Crossover','Low Cable Fly':'Low_Cable_Crossover','High Cable Fly':'High_Cable_Crossover','Incline Dumbbell Fly':'Incline_Dumbbell_Flyes','Pec Deck':'Butterfly','Chest Dips':'Dips_-_Chest_Version',
+    'Pull-Up':'Pullups','Chin-Up':'Chin-Up','Lat Pulldown':'Wide-Grip_Lat_Pulldown','Close-Grip Lat Pulldown':'Close-Grip_Front_Lat_Pulldown','One-Arm Lat Pulldown':'One_Arm_Lat_Pulldown','Straight-Arm Pulldown':'Straight-Arm_Pulldown','Seated Cable Row':'Seated_Cable_Rows','Barbell Row':'Bent_Over_Barbell_Row','Chest-Supported Row':'Lying_T-Bar_Row','One-Arm Dumbbell Row':'One-Arm_Dumbbell_Row','T-Bar Row':'T-Bar_Row_with_Handle',
+    'Overhead Press':'Barbell_Shoulder_Press','Dumbbell Shoulder Press':'Dumbbell_Shoulder_Press','Machine Shoulder Press':'Machine_Shoulder_Military_Press','Front Raise':'Front_Dumbbell_Raise','Lateral Raise':'Side_Lateral_Raise','Standing Lateral Raise Machine':'Side_Lateral_Raise','Cable Lateral Raise':'Cable_Seated_Lateral_Raise','Upright Row':'Upright_Barbell_Row','Rear Delt Fly':'Cable_Rear_Delt_Fly','Reverse Pec Deck':'Reverse_Flyes','Reverse Fly with Dumbbells':'Reverse_Flyes','Face Pull':'Face_Pull',
+    'Incline Dumbbell Curl':'Incline_Dumbbell_Curl','Dumbbell Curl':'Dumbbell_Bicep_Curl','Barbell Curl':'Barbell_Curl','Preacher Curl':'Preacher_Curl','Concentration Curl':'Standing_Concentration_Curl','Cable Curl':'Cable_Preacher_Curl','Hammer Curl':'Alternate_Hammer_Curl',
+    'Cable Pushdown':'Cable_Incline_Pushdown','Overhead Cable Extension':'Cable_Rope_Overhead_Triceps_Extension','Skull Crusher':'Band_Skull_Crusher','Close-Grip Bench Press':'Close-Grip_Barbell_Bench_Press','Dip':'Dip_Machine','Rope Pushdown':'Triceps_Pushdown_-_Rope_Attachment',
+    'Back Squat':'Barbell_Squat','Leg Press':'Leg_Press','Leg Extension':'Single-Leg_Leg_Extension','Bulgarian Split Squat':'Suspended_Split_Squat','Walking Lunge':'Walking_Lunge','Leg Curl':'Seated_Leg_Curl','Romanian Deadlift':'Romanian_Deadlift','Dumbbell Romanian Deadlift':'Romanian_Deadlift','Calf Raise':'Rocking_Standing_Calf_Raise','Seated Calf Raise':'Seated_Calf_Raise','Adductor Machine':'Adductor','Hip Thrust':'Barbell_Hip_Thrust','Glute Kickback':'Glute_Kickback','Dumbbell Reverse Lunge':'Dumbbell_Rear_Lunge',
+    'Cable Crunch':'Cable_Crunch','Decline Sit-Up':'Sit-Up','Hanging Knee Raise':'Hanging_Leg_Raise','Ab Wheel':'Plank','Deadlift':'Barbell_Deadlift','Clean and Press':'Clean_and_Press','Goblet Squat':'Goblet_Squat','Farmer Carry':'Farmers_Walk'
+  };
+  function photo(ex){
+    if(USER_PHOTOS[ex]) return USER_PHOTOS[ex];
+    const id=PHOTO_IDS[ex]||EXERCISE_IDS[ex];
+    return id ? imgBase+encodeURI(id)+'/0.jpg' : '';
+  }
+  function imgHtml(ex){
+    const src=photo(ex);
+    const fallback=imgBase+encodeURI(PHOTO_FALLBACKS[v12Group]||'Goblet_Squat')+'/0.jpg';
+    return `<img src="${src||fallback}" alt="${exerciseLabel(ex)}" loading="lazy" onerror="if(this.dataset.fallback!=='1'){this.dataset.fallback='1';this.src='${fallback}';}else{this.style.display='none';this.nextElementSibling.style.display='grid'}"><div class="noimg" style="display:none">No photo</div>`;
+  }
   function draftKey(){return 'repuno_v12_session'}
   function saveDraft(){localStorage.setItem(draftKey(),JSON.stringify({date:v12Date,group:v12Group,exercises:v12Session}))}
   function loadDraft(){try{const d=JSON.parse(localStorage.getItem(draftKey())||'null');if(d&&Array.isArray(d.exercises)){v12Date=d.date||v12Date;v12Group=d.group||'Chest';v12Session=d.exercises}}catch(e){}}
@@ -591,10 +619,13 @@ else if(localStorage.getItem("repuno_account")) showProfile();
     const found=v12Session.find(e=>e.name===ex);
     v12Current=found?JSON.parse(JSON.stringify(found)):{name:ex,group:v12Group,sets:[{kg:'',reps:''}]};
     detailTitle.textContent=exerciseLabel(ex);detailMeta.textContent=groupLabel(v12Current.group)+' • '+T('exercise');
-    const src=photo(ex);detailImg.style.display=src?'block':'none';if(src)detailImg.src=src;detailImg.onerror=()=>detailImg.style.display='none';
+    const src=photo(ex);detailImg.style.display=src?'block':'none';if(src)detailImg.src=src;detailImg.onerror=()=>{if(detailImg.dataset.fallback!=='1'){detailImg.dataset.fallback='1';detailImg.src=PHOTO_BASE+'Goblet_Squat/0.jpg';}else detailImg.style.display='none'};
     renderSets();
     const rows=exerciseHistory(ex);historyBox.innerHTML=rows.length?rows.map(r=>`<div class="v12-history-item"><strong>${r.date}</strong> — ${r.sets.map(s=>`${s.kg||0} kg × ${s.reps||0} ${T('reps')}`).join(' | ')}</div>`).join(''):`<div class="v12-history-item">${T('noHistory')}</div>`;
     document.getElementById('v12DetailBack').textContent=T('back');document.getElementById('v12AddSet').textContent=T('addSet');document.getElementById('v12SaveExercise').textContent=T('save');detail.querySelector('.v12-history h3').textContent=T('history');
+    const savedExercises=JSON.parse(localStorage.getItem('repuno_saved_exercises')||'[]');
+    const saveBtn=document.getElementById('v12SaveExercise');
+    if(savedExercises.some(e=>e.name===ex)){saveBtn.textContent=(currentLang==='ro'?'✓ Salvat':currentLang==='de'?'✓ Gespeichert':currentLang==='fr'?'✓ Enregistré':currentLang==='es'?'✓ Guardado':'✓ Saved');saveBtn.dataset.saved='1';}else{saveBtn.textContent=T('save');saveBtn.dataset.saved='0';}
     detail.style.display='block';document.body.style.overflow='hidden';
   }
   function closeDetail(){detail.style.display='none';document.body.style.overflow='';renderSessionList()}
@@ -604,13 +635,14 @@ else if(localStorage.getItem("repuno_account")) showProfile();
     const clean={name:v12Current.name,group:v12Current.group,sets:v12Current.sets.map(s=>({kg:String(s.kg||''),reps:String(s.reps||'')}))};
     const idx=v12Session.findIndex(e=>e.name===clean.name);if(idx>=0)v12Session[idx]=clean;else v12Session.push(clean);
     saveDraft();
-    const saved=JSON.parse(localStorage.getItem('repuno_saved_exercises')||'[]');
-    const si=saved.findIndex(e=>e.name===clean.name);if(si>=0)saved[si]=clean;else saved.unshift(clean);
-    localStorage.setItem('repuno_saved_exercises',JSON.stringify(saved.slice(0,200)));
-    renderSessionList();
+    const savedExercises=JSON.parse(localStorage.getItem('repuno_saved_exercises')||'[]');
+    const savedIndex=savedExercises.findIndex(e=>e.name===clean.name);
+    const persistent={...clean,savedAt:Date.now()};
+    if(savedIndex>=0)savedExercises[savedIndex]=persistent;else savedExercises.unshift(persistent);
+    localStorage.setItem('repuno_saved_exercises',JSON.stringify(savedExercises.slice(0,200)));
     const btn=document.getElementById('v12SaveExercise');
-    const old=btn.textContent;btn.textContent=(currentLang==='ro'?'✓ Salvat':currentLang==='de'?'✓ Gespeichert':currentLang==='fr'?'✓ Enregistré':currentLang==='es'?'✓ Guardado':'✓ Saved');
-    setTimeout(()=>{btn.textContent=old;},1200);
+    btn.textContent=(currentLang==='ro'?'✓ Salvat':currentLang==='de'?'✓ Gespeichert':currentLang==='fr'?'✓ Enregistré':currentLang==='es'?'✓ Guardado':'✓ Saved');
+    btn.dataset.saved='1';
   };
   function saveWholeWorkout(){
     if(!v12Session.length){alert(T('addOne'));return}
