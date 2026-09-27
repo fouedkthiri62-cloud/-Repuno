@@ -73,12 +73,12 @@ button{width:100%;border:0;border-radius:16px;padding:17px 20px;font-size:17px;f
 .v12-field label{display:block;color:#9ca9bd;font-weight:700;font-size:13px;margin:0 0 7px;text-transform:uppercase;letter-spacing:.04em}
 .v12-field select,.v12-field input{width:100%;box-sizing:border-box;border:1px solid #303b50;background:#111722;color:#fff;border-radius:16px;padding:15px;font-size:16px}
 .v12-section-title{font-size:18px;font-weight:800;color:#9ca9bd;margin:12px 0}
-.v12-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.v12-ex-card{background:#141b28;border:1px solid #2b3548;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:transform .12s}
+.v12-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+.v12-ex-card{background:#141b28;border:1px solid #2b3548;border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:transform .12s;min-width:0}
 .v12-ex-card:active{transform:scale(.985)}
-.v12-ex-card img{display:block;width:100%;aspect-ratio:1.08/1;object-fit:cover;background:#0b1018}
-.v12-ex-card .noimg{height:100%;min-height:150px;display:grid;place-items:center;color:#7f8ba0;background:#0b1018;font-size:14px}
-.v12-ex-name{padding:12px 12px 14px;font-weight:800;font-size:15px;line-height:1.18}
+.v12-ex-card img{display:block;width:100%;aspect-ratio:1.25/1;object-fit:cover;background:#0b1018}
+.v12-ex-card .noimg{height:auto;min-height:0;aspect-ratio:1.25/1;display:grid;place-items:center;color:#7f8ba0;background:#0b1018;font-size:13px}
+.v12-ex-name{padding:10px 10px 12px;font-weight:800;font-size:14px;line-height:1.25;min-height:48px;overflow-wrap:anywhere}
 .v12-session{margin-top:20px}.v12-session-card{padding:14px;border:1px solid #2b3548;border-radius:18px;background:#111722;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .v12-session-card strong{font-size:15px}.v12-session-card span{color:#9ca9bd;font-size:13px}
 .v12-session-card button{border:0;background:#252f40;color:#fff;border-radius:12px;padding:9px 11px}
@@ -548,7 +548,7 @@ else if(localStorage.getItem("repuno_account")) showProfile();
   };
   function T(k){return (tr[currentLang]||tr.en)[k]||k}
   function photo(ex){ if(ex==='Incline Machine Press') return USER_PHOTOS['Plate-Loaded Chest Press']; return USER_PHOTOS[ex] || (EXERCISE_IDS[ex]?imgBase+encodeURI(EXERCISE_IDS[ex])+'/0.jpg':'') }
-  function imgHtml(ex){const src=photo(ex);return src?`<img src="${src}" alt="${exerciseLabel(ex)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">`:`<div class="noimg">No photo</div>`}
+  function imgHtml(ex){const src=photo(ex);return src?`<img src="${src}" alt="${exerciseLabel(ex)}" loading="lazy" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="noimg" style="display:none">No photo</div>`:`<div class="noimg">No photo</div>`}
   function draftKey(){return 'repuno_v12_session'}
   function saveDraft(){localStorage.setItem(draftKey(),JSON.stringify({date:v12Date,group:v12Group,exercises:v12Session}))}
   function loadDraft(){try{const d=JSON.parse(localStorage.getItem(draftKey())||'null');if(d&&Array.isArray(d.exercises)){v12Date=d.date||v12Date;v12Group=d.group||'Chest';v12Session=d.exercises}}catch(e){}}
@@ -604,8 +604,12 @@ else if(localStorage.getItem("repuno_account")) showProfile();
     const clean={name:v12Current.name,group:v12Current.group,sets:v12Current.sets.map(s=>({kg:String(s.kg||''),reps:String(s.reps||'')}))};
     const idx=v12Session.findIndex(e=>e.name===clean.name);if(idx>=0)v12Session[idx]=clean;else v12Session.push(clean);
     saveDraft();
+    const saved=JSON.parse(localStorage.getItem('repuno_saved_exercises')||'[]');
+    const si=saved.findIndex(e=>e.name===clean.name);if(si>=0)saved[si]=clean;else saved.unshift(clean);
+    localStorage.setItem('repuno_saved_exercises',JSON.stringify(saved.slice(0,200)));
+    renderSessionList();
     const btn=document.getElementById('v12SaveExercise');
-    const old=btn.textContent;btn.textContent=(currentLang==='ro'?'✓ Salvat în antrenament':currentLang==='de'?'✓ Im Workout gespeichert':currentLang==='fr'?'✓ Enregistré dans la séance':currentLang==='es'?'✓ Guardado en el entrenamiento':'✓ Saved to workout');
+    const old=btn.textContent;btn.textContent=(currentLang==='ro'?'✓ Salvat':currentLang==='de'?'✓ Gespeichert':currentLang==='fr'?'✓ Enregistré':currentLang==='es'?'✓ Guardado':'✓ Saved');
     setTimeout(()=>{btn.textContent=old;},1200);
   };
   function saveWholeWorkout(){
